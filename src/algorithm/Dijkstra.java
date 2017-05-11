@@ -66,4 +66,28 @@ public class Dijkstra {
 		
 		return graph;
 	}
+	
+	public void printRouteandDistance(Graph graph, int ende, int start){
+		if(start != ende){
+			rec(graph, graph.vertices.get(ende).getPrev(), start);
+			System.out.println(ende);
+			
+		}else{
+			System.out.println(ende);
+		}
+		
+		System.out.println("Distance = " + graph.vertices.get(ende).getDistance());
+		
+	}
+	
+	// Rückwärts durchlaufen, da startwert = endwert am Anfang. Daher mit endwert rückwärts laufen
+	public void rec(Graph graph, int start, int ende){
+		if(start != ende){
+			rec(graph, graph.vertices.get(start).getPrev(), ende);
+			System.out.print(start + " ");
+			
+		}else{
+			System.out.print(ende + " ");
+		}
+	}
 }

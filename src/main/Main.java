@@ -9,7 +9,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		ArrayList<String> textinput = new ArrayList<>();
-		textinput.add("Wege2.txt");
+		textinput.add("Wege1.txt");
 
 		for (String string : textinput) {
 			Graph graph = new Graph(true);
@@ -24,7 +24,7 @@ public class Main {
 			long start_ms;
 
 			start_ms = System.currentTimeMillis();
-			graph.dijkstra(2);
+			graph.dijkstra(2, 7);
 			System.out.println((System.currentTimeMillis() - start_ms) + " ms.");
 
 		}

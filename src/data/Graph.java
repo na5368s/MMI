@@ -346,10 +346,12 @@ public class Graph {
 	// Algorithmus für Praktikum 5
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public void dijkstra(int start){
+	public void dijkstra(int start, int ende){
 		dijkstra = new Dijkstra(V, vertices, gerichtet);
 		
 		Graph graph = dijkstra.getSmallestRoute(start);
+		System.out.println();
+		dijkstra.printRouteandDistance(graph, ende, start);
 		System.out.println();
 	}
 }

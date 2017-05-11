@@ -46,6 +46,10 @@ public class Vertex implements Cloneable{
 		this.prev = prev;
 	}
 	
+	public int getPrev(){
+		return prev;
+	}
+	
 	public int getData(){
 		return data;
 	}
