@@ -27,9 +27,8 @@ public class BranchAndBound {
 		double cost = 0;
 		doubleTree.doubleTree(start);
 		min = doubleTree.getOptimalCost();
-		//System.out.println("MINIMUM: " + min);
 		tourOptimal = doubleTree.getTour();
-		
+
 		visited[start] = true;
 		startVertex = start;
 		tour.add(start);
@@ -38,15 +37,16 @@ public class BranchAndBound {
 	}
 
 	public void rekTsp(boolean visited[], int start, double cost) {
-		boolean check = true;
+
 		for (Edge edge : vertices.get(start).edges) {
 			if (!visited[edge.getDest()]) {
 				tour.add(edge.getDest());
 				visited[edge.getDest()] = true;
 				cost += edge.getWeight();
-				//System.out.println(cost);
-				if (cost < min) {				
+
+				if (cost < min) {
 					rekTsp(visited, edge.getDest(), cost);
+					boolean check = true;
 					for (boolean b : visited) {
 						if (!b) {
 							check = false;
@@ -55,31 +55,26 @@ public class BranchAndBound {
 					}
 
 					if (check) {
-						for (Edge edge2 : vertices.get(edge.getDest()).edges) {
-							if(edge2.getDest() == startVertex){
-								cost += edge2.getWeight();
-								//System.out.println(cost);
-								if(cost < min){
-									tourOptimal.clear();
-									tourOptimal.addAll(tour);
-									tourOptimal.add(startVertex);
-									min = cost;
-									//System.out.println("New MINIMUM: " + min);
-								}		
-								cost -= edge2.getWeight();
-								break;
-							}
+
+						Edge ptr = vertices.get(edge.getDest()).getEdge(edge.getDest(), startVertex);
+						cost += ptr.getWeight();
+						if(cost < min){
+							tourOptimal.clear();
+							tourOptimal.addAll(tour);
+							tourOptimal.add(startVertex);
+							min = cost;
 						}
+						cost -= ptr.getWeight();
 					}
 				}
-				// visited[start] = false;
+
 				visited[edge.getDest()] = false;
 				tour.remove(tour.size() - 1);
 				cost -= edge.getWeight();
 			}
 		}
 	}
-	
+
 	public void printBranchAndBoundTourAndCost(){
 		System.out.print("Tour: ");
 		for (Integer integer : tourOptimal) {
@@ -87,7 +82,7 @@ public class BranchAndBound {
 		}
 		System.out.println();
 		System.out.println("Minimum Cost: " + min);
-		
-		
+
+
 	}
 }
