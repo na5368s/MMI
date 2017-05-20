@@ -15,6 +15,7 @@ public class Graph {
 	private TSP tsp;
 	private BranchAndBound bab;
 	private Dijkstra dijkstra;
+	private MooreBellmanFord mooreBellmanFord;
 
 	public List<Vertex> vertices;
 	protected int V = 0;
@@ -348,8 +349,19 @@ public class Graph {
 		dijkstra = new Dijkstra(V, vertices, gerichtet);
 		
 		Graph graph = dijkstra.getSmallestRoute(start);
-		System.out.println();
 		dijkstra.printRouteandDistance(graph, ende, start);
+		System.out.println();
+	}
+
+	public void moore_Bellman_Ford(int start, int ende){
+		mooreBellmanFord = new MooreBellmanFord(V, vertices, gerichtet);
+
+		Graph graph = mooreBellmanFord.getSmallestRoute(start, ende);
+		if(mooreBellmanFord.getCycle().isEmpty()) {
+			mooreBellmanFord.printRouteandDistance(graph, ende, start);
+		}else{
+			mooreBellmanFord.printCycle();
+		}
 		System.out.println();
 	}
 }
