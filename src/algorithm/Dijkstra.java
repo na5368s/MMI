@@ -21,6 +21,7 @@ public class Dijkstra {
 		Vertex v;
 		for (int i = 0; i < V; i++) {
 			v = new Vertex(i);
+			v.setDistance(Double.POSITIVE_INFINITY);
 			graph.vertices.add(v);
 		}
 
@@ -29,10 +30,11 @@ public class Dijkstra {
 		graph.vertices.get(start).setPrev(start);
 
 		int index = start;
-		double min = Double.MAX_VALUE;
+		double min = Double.POSITIVE_INFINITY;
 		
 		boolean check = false;
 		double distance = 0;
+
 		
 		while (!check) {
 			for (Vertex vertex : graph.vertices) {
@@ -58,7 +60,7 @@ public class Dijkstra {
 			for (boolean b : visited) {
 				if(!b){
 					check = false;
-					min = Double.MAX_VALUE;
+					min = Double.POSITIVE_INFINITY;
 					break;
 				}
 			}
@@ -80,7 +82,7 @@ public class Dijkstra {
 		
 	}
 	
-	// Rückwärts durchlaufen, da startwert = endwert am Anfang. Daher mit endwert rückwärts laufen
+	// Rï¿½ckwï¿½rts durchlaufen, da startwert = endwert am Anfang. Daher mit endwert rï¿½ckwï¿½rts laufen
 	public void rec(Graph graph, int start, int ende){
 		if(start != ende){
 			rec(graph, graph.vertices.get(start).getPrev(), ende);
