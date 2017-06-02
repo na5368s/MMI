@@ -32,6 +32,8 @@ public class Main {
 
 		}
 
+		// Praktikum 5 : Dijkstra and Moore-Bellmond-Ford
+
 		/*ArrayList<String> textinput = new ArrayList<>();
 		textinput.add("Wege1.txt");
 		textinput.add("Wege2.txt");
