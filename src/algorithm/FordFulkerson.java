@@ -44,7 +44,7 @@ public class FordFulkerson {
 
             setFlow(graph, tour, min);
 
-            graph = setResidualGraph(graph, tour, min);
+            graph = setResidualGraph(graph, tour);
 
             dijkstra.setVertices(graph.vertices);
             tour.clear();
@@ -53,7 +53,7 @@ public class FordFulkerson {
         return maxFlow;
     }
 
-    public Graph setResidualGraph(Graph graph, List<Vertex> tour, double min){
+    public Graph setResidualGraph(Graph graph, List<Vertex> tour){
         Edge temp;
         for(int i=0; i<tour.size()-1; i++){
             int src = tour.get(i).getData();
