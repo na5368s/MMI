@@ -126,8 +126,10 @@ public class Dijkstra {
 	
 	public void printRouteandDistance(Graph graph, int ende, int start){
 		if(start != ende){
-			rec(graph, graph.vertices.get(ende).getPrev().getData(), start);
-			System.out.println(ende);
+			if(graph.vertices.get(ende).getPrev() != null) {
+				rec(graph, graph.vertices.get(ende).getPrev().getData(), start);
+				System.out.println(ende);
+			}
 			
 		}else{
 			System.out.println(ende);
@@ -140,8 +142,10 @@ public class Dijkstra {
 	// R�ckw�rts durchlaufen, da startwert = endwert am Anfang. Daher mit endwert r�ckw�rts laufen
 	public void rec(Graph graph, int start, int ende){
 		if(start != ende){
-			rec(graph, graph.vertices.get(start).getPrev().getData(), ende);
-			System.out.print(start + " ");
+			if(graph.vertices.get(start).getPrev() != null) {
+				rec(graph, graph.vertices.get(start).getPrev().getData(), ende);
+				System.out.print(start + " ");
+			}
 
 		}else{
 			System.out.print(ende + " ");
