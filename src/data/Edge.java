@@ -4,6 +4,7 @@ public class Edge implements Comparable<Edge>, Cloneable {
 	private int src = 0;
 	private int dest = 0;
 	private double weight = 0;
+	private double capacity = 0;
 	private double flow = 0;
 
 	public Edge(int src, int dest) {
@@ -15,12 +16,14 @@ public class Edge implements Comparable<Edge>, Cloneable {
 		this.src = src;
 		this.dest = dest;
 		this.weight = weight;
+		this.capacity = weight;
 	}
 
 	public Edge(Edge edge) {
 		src = edge.src;
 		dest = edge.dest;
 		weight = edge.weight;
+		capacity = edge.capacity;
 	}
 
 	public int getSrc() {
@@ -39,8 +42,10 @@ public class Edge implements Comparable<Edge>, Cloneable {
 		return weight;
 	}
 
-	public void setFlow(){
-		this.flow = 0;
+	public double getCapacity() { return capacity; }
+
+	public void setFlow(double min){
+		flow = flow + min;
 	}
 
 	public double getFlow(){

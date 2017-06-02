@@ -373,6 +373,6 @@ public class Graph {
     public void fordFulkerson(int start, int ende){
         fordFulkerson = new FordFulkerson(V,vertices,gerichtet);
 
-        fordFulkerson.getMaxFlow(start, ende);
-    }
+		System.out.println("Maximaler Flusswert: " + fordFulkerson.getMaxFlow(start, ende));
+	}
 }

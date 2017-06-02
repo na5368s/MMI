@@ -36,7 +36,7 @@ public class MooreBellmanFord {
 
 
         graph.vertices.get(start).setDistance(0);
-        graph.vertices.get(start).setPrev(start);
+        graph.vertices.get(start).setPrev(graph.vertices.get(start));
 
 
         setEdges(graph.vertices);
@@ -48,7 +48,7 @@ public class MooreBellmanFord {
                  ) {
                 if(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight() < graph.vertices.get(edge.getDest()).getDistance()){
                     graph.vertices.get(edge.getDest()).setDistance(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight());
-                    graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(edge.getSrc()).getData());
+                    graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(edge.getSrc()));
                 }
             }
 
@@ -72,7 +72,7 @@ public class MooreBellmanFord {
 
     public void printRouteandDistance(Graph graph, int ende, int start){
         if(start != ende){
-            rec(graph, graph.vertices.get(ende).getPrev(), start);
+            rec(graph, graph.vertices.get(ende).getPrev().getData(), start);
             System.out.println(ende);
 
         }else{
@@ -86,7 +86,7 @@ public class MooreBellmanFord {
     // R�ckw�rts durchlaufen, da startwert = endwert am Anfang. Daher mit endwert r�ckw�rts laufen
     public void rec(Graph graph, int start, int ende){
         if(start != ende){
-            rec(graph, graph.vertices.get(start).getPrev(), ende);
+            rec(graph, graph.vertices.get(start).getPrev().getData(), ende);
             System.out.print(start + " ");
 
         }else{
@@ -126,7 +126,7 @@ public class MooreBellmanFord {
                 ) {
             if(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight() < graph.vertices.get(edge.getDest()).getDistance()){
                 graph.vertices.get(edge.getDest()).setDistance(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight());
-                graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(edge.getSrc()).getData());
+                graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(edge.getSrc()));
                 check = true;
                 tempListforCycle.add(edge);
             }

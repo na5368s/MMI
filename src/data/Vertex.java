@@ -5,7 +5,7 @@ public class Vertex implements Cloneable{
 	private boolean visited = false;
 	private int data;
 	private double distance = Double.MAX_VALUE;
-	private int prev;
+	private Vertex prev;
 	public List<Edge> edges;
 	
 	public Vertex(int data){
@@ -42,11 +42,11 @@ public class Vertex implements Cloneable{
 		return distance;
 	}
 	
-	public void setPrev(int prev){
+	public void setPrev(Vertex prev){
 		this.prev = prev;
 	}
 	
-	public int getPrev(){
+	public Vertex getPrev(){
 		return prev;
 	}
 	

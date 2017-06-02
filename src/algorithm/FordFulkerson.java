@@ -22,6 +22,7 @@ public class FordFulkerson {
 
     public double getMaxFlow(int start, int ende){
         Graph graph = new Graph(gerichtet);
+        double maxFlow = 0;
 
         Vertex v;
 
@@ -34,91 +35,119 @@ public class FordFulkerson {
 
         dijkstra = new Dijkstra(V, graph.vertices, gerichtet);
         dijkstra.setEdgesWeightEqual();
-        List<Integer> tour = dijkstra.getTour(dijkstra.getSmallestRoute(start), ende, start);
+        List<Vertex> tour;
+        double min;
+        Graph temp;
 
+        while(dijkstra.checkTour(dijkstra.getSmallestRoute(start), ende, start)){
+            tour = dijkstra.getTour();
+            min = getGamma(graph, tour);
+            maxFlow += min;
+            //System.out.println(min);
 
-        for (Integer a:tour
-             ) {
-            System.out.print(a + " ");
+            setFlow(graph, tour, min);
+
+            graph = setResidualGraph(graph, tour, min);
+
+            dijkstra.setVertices(graph.vertices);
+            tour.clear();
+            //graph = setResidualGraph(graph, min, tour);
+            /*graph = setResidualGraph(graph, min, dfs.getDfsRoute());
+            graph.clearVisited();
+            dfs = new DFS(graph.vertices);
+            System.out.println(counter++);*/
         }
-        System.out.println();
 
-        return 0;
+        return maxFlow;
     }
 
-    public void recDepthSearchBefore(int start, int ende) {
-        ArrayList<Vertex> queue = new ArrayList<>();
-        dfsroute = new ArrayList<>();
+    public Graph setResidualGraph(Graph graph, List<Vertex> tour, double min){
+        Edge temp;
+        for(int i=0; i<tour.size()-1; i++){
+            int src = tour.get(i).getData();
+            int dest = tour.get(i + 1).getData();
 
-        vertices.get(start).setVisited();
-        queue.add(vertices.get(start));
-        recDepthSearch(queue, ende);
-        List<Integer> a = getDfsRoute();
-        for (Integer b:a
-             ) {
-            System.out.print(b + " ");
-        }
-        System.out.println();
-    }
+            Edge edge = graph.vertices.get(src).getEdge(src, dest);
 
-    public boolean recDepthSearch(ArrayList<Vertex> queue, int ende) {
-        boolean check = false;
-        int index;
-        while (!queue.isEmpty()) {
-            Vertex temp = queue.remove(0);
-            // System.out.print(temp.getData() + " ");
-            dfsroute.add(temp.getData());
-            if(temp.getData() == ende){
-                check = true;
-                return check;
-            }
-            for (Edge edge : temp.edges) {
-                index = edge.getDest();
-                if (!vertices.get(index).isVisited()) {
-                    vertices.get(index).setVisited();
-                    check = recDepthSearch(queue, ende);
-                    if(check){
-                        return check;
-                    }else {
-                        dfsroute.remove(dfsroute.size()-1);
-                        queue.add(vertices.get(index));
+            if(edge != null){
+                if(edge.getFlow() == edge.getCapacity()){
+                    // Falls kein Rückweg besteht muss dieser hinzugefügt und Hinweg entfernt werden da Flusswert = Kapazität
+                    if(graph.vertices.get(dest).getEdge(dest, src) == null){
+                        temp = new Edge(edge.getDest(), edge.getSrc(), edge.getCapacity());
+                        graph.vertices.get(dest).addEdge(temp);
+                        graph.vertices.get(src).removeEdge(edge);
+                    }else{
+                        graph.vertices.get(src).removeEdge(edge);
+                    }
+                }else if(edge.getFlow() != 0){
+                    // Falls kein Rückweg besteht muss dieser hinzugefügt werden da Flusswert != 0
+                    if(graph.vertices.get(dest).getEdge(dest, src) == null){
+                        temp = new Edge(edge.getDest(), edge.getSrc(), edge.getCapacity());
+                        temp.setFlow(edge.getCapacity() - edge.getFlow());
+                        graph.vertices.get(dest).addEdge(temp);
+                    }
+                }else if(edge.getFlow() == 0){
+                    // Falls ein Rückweg besteht muss dieser entfernt werden da Flusswert = 0
+                    if(graph.vertices.get(dest).getEdge(dest, src) != null){
+                        graph.vertices.get(dest).removeEdge(graph.vertices.get(dest).getEdge(dest, src));
                     }
                 }
-            }
-        }
-        return check;
-    }
+            }else {
+                edge = graph.vertices.get(dest).getEdge(dest, src);
+                if(edge.getFlow() == edge.getCapacity()){
+                    // Hinweg muss hinzugefügt und Rückweg entfernt werden
+                    temp = new Edge(edge.getSrc(), edge.getDest(), edge.getCapacity());
+                    graph.vertices.get(src).addEdge(temp);
+                    graph.vertices.get(dest).removeEdge(edge);
 
-    public List<Integer> getDfsRoute(){
-        return dfsroute;
-    }
-
-    public void iterativeBreadthSearch(Graph graph, int start, int ende) {
-        ArrayList<Vertex> queue = new ArrayList<Vertex>();
-        List<List<Integer>> array = new ArrayList<>();
-        List<Integer> p = new ArrayList<>();
-
-        graph.vertices.get(start).setVisited();
-        queue.add(graph.vertices.get(start));
-        p.add(start);
-
-        int index;
-        while (!queue.isEmpty()) {
-            Vertex temp = queue.remove(0);
-            for (Edge edge : temp.edges) {
-                index = edge.getDest();
-                if (!graph.vertices.get(index).isVisited()) {
-                    graph.vertices.get(index).setVisited();
-                    queue.add(graph.vertices.get(index));
-                    p.add(index);
+                }else if(edge.getFlow() != 0){
+                    // Falls kein Hinweg besteht muss dieser hinzugefügt werden da Flusswert != 0
+                    temp = new Edge(edge.getSrc(), edge.getDest(), edge.getCapacity());
+                    temp.setFlow(edge.getCapacity() - edge.getFlow());
+                    graph.vertices.get(src).addEdge(temp);
                 }
+                // Flow Wert = 0 entfällt da hier abgefangen wird für Rückwege, da Hinweg nicht existiert
+            }
+
+        }
+        return graph;
+    }
+
+    public void setFlow(Graph graph, List<Vertex> tour, double min){
+        for (int i=0; i<tour.size()-1; i++){
+            int src = tour.get(i).getData();
+            int dest = tour.get(i + 1).getData();
+
+            if(vertices.get(src).getEdge(src, dest) != null){
+                graph.vertices.get(src).getEdge(src, dest).setFlow(min);
+                if(graph.vertices.get(dest).getEdge(dest, src) != null){
+                    graph.vertices.get(dest).getEdge(dest, src).setFlow(-min);
+                }
+            }else {
+                graph.vertices.get(dest).getEdge(dest, src).setFlow(-min);
+                graph.vertices.get(src).getEdge(src, dest).setFlow(min);
+            }
+
+        }
+    }
+
+    public double getGamma(Graph graph, List<Vertex> tour){
+        int src, dest;
+        double min = Double.MAX_VALUE;
+        Edge edge;
+
+        for(int i=0; i<tour.size()-1; i++) {
+            src = tour.get(i).getData();
+            dest = tour.get(i + 1).getData();
+
+            edge = graph.vertices.get(src).getEdge(src, dest);
+
+            if(edge.getCapacity() - edge.getFlow() < min){
+                min = edge.getCapacity() - edge.getFlow();
             }
         }
-        for (Integer i:p
-                ) {
-            System.out.print(i + " ");
-        }
-        System.out.println();
+
+        return min;
     }
 
     public void setEdges(List<Vertex> vertexList) {

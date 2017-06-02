@@ -8,13 +8,17 @@ public class Dijkstra {
 	private int V;
 	private List<Vertex> vertices;
 	private boolean gerichtet;
-	private List<Integer> tour;
+	private List<Vertex> tour;
 
 	public Dijkstra(int V, List<Vertex> vertices, boolean gerichtet) {
 		this.V = V;
 		this.vertices = vertices;
 		this.gerichtet = gerichtet;
 		tour = new ArrayList<>();
+	}
+
+	public void setVertices(List<Vertex> vertices){
+		this.vertices = vertices;
 	}
 
 	public void setEdgesWeightEqual(){
@@ -43,16 +47,14 @@ public class Dijkstra {
 
 		visited[start] = true;
 		graph.vertices.get(start).setDistance(0);
-		graph.vertices.get(start).setPrev(start);
+		graph.vertices.get(start).setPrev(graph.vertices.get(start));
 
 		int index = start;
 		double min = Double.POSITIVE_INFINITY;
-		
-		boolean check = false;
+
 		double distance = 0;
 
-		
-		while (!check) {
+		for(int i=0; i<V-1; i++){
 			for (Vertex vertex : graph.vertices) {
 				if (!visited[vertex.getData()] && vertex.getDistance() < min) {
 					index = vertex.getData();
@@ -66,16 +68,14 @@ public class Dijkstra {
 					distance = graph.vertices.get(index).getDistance() + edge.getWeight();
 					if(distance < graph.vertices.get(edge.getDest()).getDistance()){
 						graph.vertices.get(edge.getDest()).setDistance(distance);
-						graph.vertices.get(edge.getDest()).setPrev(index);
+						graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(index));
 					}
-					
+
 				}
 			}
-			
-			check = true;
+
 			for (boolean b : visited) {
 				if(!b){
-					check = false;
 					min = Double.POSITIVE_INFINITY;
 					break;
 				}
@@ -85,31 +85,48 @@ public class Dijkstra {
 		return graph;
 	}
 
-	public List<Integer> getTour(Graph graph, int ende, int start){
+	public List<Vertex> getTour(){
+		return this.tour;
+	}
+
+	public boolean checkTour(Graph graph, int ende, int start){
+		boolean check = false;
 		if(start != ende){
-			recTour(graph, graph.vertices.get(ende).getPrev(), start);
-			tour.add(ende);
+			if(graph.vertices.get(ende).getPrev() != null) {
+				recTour(graph, graph.vertices.get(ende).getPrev().getData(), start);
+				tour.add(graph.vertices.get(ende));
+			}
 
 		}else{
-			tour.add(ende);
+			tour.add(graph.vertices.get(ende));
 		}
 
-		return tour;
+		for (Vertex i:tour
+			 ) {
+			if(i.getData() == ende){
+				check = true;
+				return check;
+			}
+		}
+
+		return check;
 	}
 
 	public void recTour(Graph graph, int start, int ende){
 		if(start != ende){
-			recTour(graph, graph.vertices.get(start).getPrev(), ende);
-			tour.add(start);
+			if(graph.vertices.get(start).getPrev() != null) {
+				recTour(graph, graph.vertices.get(start).getPrev().getData(), ende);
+				tour.add(graph.vertices.get(start));
+			}
 
 		}else{
-			tour.add(start);
+			tour.add(graph.vertices.get(start));
 		}
 	}
 	
 	public void printRouteandDistance(Graph graph, int ende, int start){
 		if(start != ende){
-			rec(graph, graph.vertices.get(ende).getPrev(), start);
+			rec(graph, graph.vertices.get(ende).getPrev().getData(), start);
 			System.out.println(ende);
 			
 		}else{
@@ -123,7 +140,7 @@ public class Dijkstra {
 	// R�ckw�rts durchlaufen, da startwert = endwert am Anfang. Daher mit endwert r�ckw�rts laufen
 	public void rec(Graph graph, int start, int ende){
 		if(start != ende){
-			rec(graph, graph.vertices.get(start).getPrev(), ende);
+			rec(graph, graph.vertices.get(start).getPrev().getData(), ende);
 			System.out.print(start + " ");
 
 		}else{
