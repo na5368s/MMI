@@ -8,6 +8,10 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		//--------------------------------------------------------------------------------
+		// Praktikum 6 : Ford-Fulkerson / Edmonds-Karp
+		//--------------------------------------------------------------------------------
+
 		ArrayList<String> textinput = new ArrayList<>();
 		textinput.add("Fluss.txt");
 		textinput.add("G_1_2.txt");
@@ -32,7 +36,9 @@ public class Main {
 
 		}
 
+		//--------------------------------------------------------------------------------
 		// Praktikum 5 : Dijkstra and Moore-Bellmond-Ford
+		//--------------------------------------------------------------------------------
 
 		/*ArrayList<String> textinput = new ArrayList<>();
 		textinput.add("Wege1.txt");

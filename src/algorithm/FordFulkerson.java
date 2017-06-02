@@ -12,7 +12,6 @@ public class FordFulkerson {
     private int V;
     private List<Vertex> vertices;
     private boolean gerichtet;
-    private List<Integer> dfsroute;
 
     public FordFulkerson(int V, List<Vertex> vertices, boolean gerichtet) {
         this.V = V;
@@ -37,13 +36,11 @@ public class FordFulkerson {
         dijkstra.setEdgesWeightEqual();
         List<Vertex> tour;
         double min;
-        Graph temp;
 
         while(dijkstra.checkTour(dijkstra.getSmallestRoute(start), ende, start)){
             tour = dijkstra.getTour();
             min = getGamma(graph, tour);
             maxFlow += min;
-            //System.out.println(min);
 
             setFlow(graph, tour, min);
 
@@ -51,11 +48,6 @@ public class FordFulkerson {
 
             dijkstra.setVertices(graph.vertices);
             tour.clear();
-            //graph = setResidualGraph(graph, min, tour);
-            /*graph = setResidualGraph(graph, min, dfs.getDfsRoute());
-            graph.clearVisited();
-            dfs = new DFS(graph.vertices);
-            System.out.println(counter++);*/
         }
 
         return maxFlow;
