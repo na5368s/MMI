@@ -8,13 +8,29 @@ public class Dijkstra {
 	private int V;
 	private List<Vertex> vertices;
 	private boolean gerichtet;
+	private List<Integer> tour;
 
 	public Dijkstra(int V, List<Vertex> vertices, boolean gerichtet) {
 		this.V = V;
 		this.vertices = vertices;
 		this.gerichtet = gerichtet;
+		tour = new ArrayList<>();
 	}
 
+	public void setEdgesWeightEqual(){
+		for (Vertex v:vertices
+			 ) {
+			for (Edge e:v.edges
+				 ) {
+				e.setWeight(1);
+			}
+		}
+	}
+	/**
+	 *
+	 * @param start - starting vertex value
+	 * @return - graph with modified distances and predecessors for each vertex
+	 */
 	public Graph getSmallestRoute(int start) {
 		Graph graph = new Graph(gerichtet);
 		boolean visited[] = new boolean[V];
@@ -68,6 +84,28 @@ public class Dijkstra {
 		
 		return graph;
 	}
+
+	public List<Integer> getTour(Graph graph, int ende, int start){
+		if(start != ende){
+			recTour(graph, graph.vertices.get(ende).getPrev(), start);
+			tour.add(ende);
+
+		}else{
+			tour.add(ende);
+		}
+
+		return tour;
+	}
+
+	public void recTour(Graph graph, int start, int ende){
+		if(start != ende){
+			recTour(graph, graph.vertices.get(start).getPrev(), ende);
+			tour.add(start);
+
+		}else{
+			tour.add(start);
+		}
+	}
 	
 	public void printRouteandDistance(Graph graph, int ende, int start){
 		if(start != ende){
@@ -87,7 +125,7 @@ public class Dijkstra {
 		if(start != ende){
 			rec(graph, graph.vertices.get(start).getPrev(), ende);
 			System.out.print(start + " ");
-			
+
 		}else{
 			System.out.print(ende + " ");
 		}

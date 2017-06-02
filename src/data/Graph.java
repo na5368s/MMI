@@ -16,6 +16,7 @@ public class Graph {
 	private BranchAndBound bab;
 	private Dijkstra dijkstra;
 	private MooreBellmanFord mooreBellmanFord;
+    private FordFulkerson fordFulkerson;
 
 	public List<Vertex> vertices;
 	protected int V = 0;
@@ -356,7 +357,7 @@ public class Graph {
 	public void moore_Bellman_Ford(int start, int ende){
 		mooreBellmanFord = new MooreBellmanFord(V, vertices, gerichtet);
 
-		Graph graph = mooreBellmanFord.getSmallestRoute(start, ende);
+		Graph graph = mooreBellmanFord.getSmallestRoute(start);
 		if(mooreBellmanFord.getCycle().isEmpty()) {
 			mooreBellmanFord.printRouteandDistance(graph, ende, start);
 		}else{
@@ -364,4 +365,14 @@ public class Graph {
 		}
 		System.out.println();
 	}
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Algorithmus f�r Praktikum 5
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void fordFulkerson(int start, int ende){
+        fordFulkerson = new FordFulkerson(V,vertices,gerichtet);
+
+        fordFulkerson.getMaxFlow(start, ende);
+    }
 }

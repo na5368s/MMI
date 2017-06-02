@@ -20,7 +20,12 @@ public class MooreBellmanFord {
         cycle = new ArrayList<>();
     }
 
-    public Graph getSmallestRoute(int start, int ende) {
+    /**
+     *
+     * @param start - starting vertex value
+     * @return - graph with modifcated distance and predecessors for each vertex
+     */
+    public Graph getSmallestRoute(int start) {
         Graph graph = new Graph(gerichtet);
         Vertex v;
         for (int i = 0; i < V; i++) {
@@ -55,7 +60,7 @@ public class MooreBellmanFord {
 
                     checkCycle(edgeList, graph, tempListforCycle);
 
-                    setCycle(tempListforCycle, ende);
+                    setCycle(tempListforCycle);
                 }
             }
         }
@@ -129,14 +134,14 @@ public class MooreBellmanFord {
         return check;
     }
 
-    public void setCycle(List<Edge> edgeList, int ende){
+    public void setCycle(List<Edge> edgeList){
         int start = edgeList.get(0).getSrc();
         boolean []visited = new boolean[V];
 
         while(true){
             for (Edge edge:edgeList
                  ) {
-                if(!visited[edge.getDest()] && edge.getSrc() == start && edge.getDest() != ende){
+                if(!visited[edge.getDest()] && edge.getSrc() == start ){
                     cycle.add(edge);
                     start = edge.getDest();
                     visited[edge.getDest()] = true;

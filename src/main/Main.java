@@ -9,6 +9,28 @@ public class Main {
 	public static void main(String[] args) {
 
 		ArrayList<String> textinput = new ArrayList<>();
+		textinput.add("Fluss.txt");
+
+		boolean gerichtet = true;
+
+		for (String string : textinput) {
+			Graph graph = new Graph(gerichtet);
+
+			graph.setFromEdgeList(string);
+			System.out.println(string);
+
+			long start_ms;
+
+			System.out.println("-----------------------------------------------------");
+			System.out.println("FordFulkerson:");
+			System.out.println("-----------------------------------------------------");
+			start_ms = System.currentTimeMillis();
+			graph.fordFulkerson(0,7);
+			System.out.println((System.currentTimeMillis() - start_ms) + " ms.");
+
+		}
+
+		/*ArrayList<String> textinput = new ArrayList<>();
 		textinput.add("Wege1.txt");
 		textinput.add("Wege2.txt");
 		textinput.add("Wege3.txt");
@@ -44,7 +66,7 @@ public class Main {
 				if(string.equals("G_1_2.txt")) {
 					graph.moore_Bellman_Ford(0, 1);
 				}else {
-					graph.moore_Bellman_Ford(2, 0);
+					graph.moore_Bellman_Ford(2, 1);
 				}
 				System.out.println((System.currentTimeMillis() - start_ms) + " ms.");
 			}else{
@@ -62,7 +84,7 @@ public class Main {
 			}
 
 
-		}
+		}*/
 
 	}
 
