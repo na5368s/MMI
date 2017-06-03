@@ -61,7 +61,7 @@ public class FordFulkerson {
 
             Edge edge = graph.vertices.get(src).getEdge(src, dest);
 
-            if(edge != null){
+            if(edge != null){ // Für Hinwege
                 if(edge.getFlow() == edge.getCapacity()){
                     // Falls kein Rückweg besteht muss dieser hinzugefügt und Hinweg entfernt werden da Flusswert = Kapazität
                     if(graph.vertices.get(dest).getEdge(dest, src) == null){
@@ -84,7 +84,7 @@ public class FordFulkerson {
                         graph.vertices.get(dest).removeEdge(graph.vertices.get(dest).getEdge(dest, src));
                     }
                 }
-            }else {
+            }else { // Für Rückwege falls kein Hinweg besteht
                 edge = graph.vertices.get(dest).getEdge(dest, src);
                 if(edge.getFlow() == edge.getCapacity()){
                     // Hinweg muss hinzugefügt und Rückweg entfernt werden
