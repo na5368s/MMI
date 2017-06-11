@@ -17,6 +17,7 @@ public class Graph {
 	private Dijkstra dijkstra;
 	private MooreBellmanFord mooreBellmanFord;
     private FordFulkerson fordFulkerson;
+    private CycleCanceling cycleCanceling;
 
 	public List<Vertex> vertices;
 	protected int V = 0;
@@ -101,6 +102,7 @@ public class Graph {
 	public void setFromEdgeList(String file) {
 
 		Vertex vertex;
+		int counter = 0;
 
 		try {
 
@@ -114,52 +116,81 @@ public class Graph {
 				vertices.add(vertex);
 			}
 			while (reader.ready()) { // Jetzt kommen Zeilen der Form
-										// v1 v2 Gewicht
+				// v1 v2 Gewicht
 				String s = reader.readLine();
 				String[] kante = s.split("	"); // Trenne zwischen " "
-												// Tabulator
+				// Tabulator
 
-				int v1 = Integer.parseInt(kante[0]); // hier wird v1(s.oben) in
-														// ein Integer
-														// umgewandelt
-
-				int v2 = Integer.parseInt(kante[1]); // ."..v2..."...
-				double gewicht = 0;
-				if (kante.length > 2) {
-					gewicht = Double.parseDouble(kante[2]); // Und das Gewicht
-															// wird ebenfalls in
-															// ein Double
-															// umgewandelt
-
-				}
-
-				if (gerichtet) {
-					Edge edge;
-					if (kante.length > 2) {
-						edge = new Edge(v1, v2, gewicht);
-					} else {
-						edge = new Edge(v1, v2);
+				if (kante.length < 2) {
+					Double balance = Double.parseDouble(kante[0]);
+					if(balance < 0){
+						vertices.get(counter).setisSink();
 					}
-					vertices.get(v1).addEdge(edge);
-					E++;
+					vertices.get(counter++).setBalance(balance);
 				} else {
-					Edge edge;
+					int v1 = Integer.parseInt(kante[0]); // hier wird v1(s.oben) in
+					// ein Integer
+					// umgewandelt
+
+					int v2 = Integer.parseInt(kante[1]); // ."..v2..."...
+					double gewicht = 0;
+					double cost = 0;
 					if (kante.length > 2) {
-						edge = new Edge(v1, v2, gewicht);
-					} else {
-						edge = new Edge(v1, v2);
+						if(kante.length == 4){
+							cost = Double.parseDouble(kante[2]); // Kosten für Kante
+							gewicht = Double.parseDouble(kante[3]);
+						}else {
+							gewicht = Double.parseDouble(kante[2]); // Und das Gewicht
+							// wird ebenfalls in
+							// ein Double
+							// umgewandelt
+						}
+
 					}
-					if (!vertices.get(v1).contains(edge)) {
+
+					if (gerichtet) {
+						Edge edge;
+						edge = modifyEdge(kante, v1, v2, gewicht, cost);
+						/*if (kante.length > 2) {
+							if(kante.length == 3) {
+								edge = new Edge(v1, v2, gewicht);
+							}else {
+								edge = new Edge(v1, v2, gewicht, cost);
+							}
+						} else {
+							edge = new Edge(v1, v2);
+						}*/
 						vertices.get(v1).addEdge(edge);
 						E++;
-
-						if (kante.length > 2) {
-							edge = new Edge(v2, v1, gewicht);
+					} else {
+						Edge edge;
+						edge = modifyEdge(kante, v1, v2, gewicht, cost);
+						/*if (kante.length > 2) {
+							if(kante.length == 3) {
+								edge = new Edge(v1, v2, gewicht);
+							}else {
+								edge = new Edge(v1, v2, gewicht, cost);
+							}
 						} else {
-							edge = new Edge(v2, v1);
+							edge = new Edge(v1, v2);
+						}*/
+						if (!vertices.get(v1).contains(edge)) {
+							vertices.get(v1).addEdge(edge);
+							E++;
+
+							edge = modifyEdge(kante, v1, v2, gewicht, cost);
+						/*if (kante.length > 2) {
+							if(kante.length == 3) {
+								edge = new Edge(v1, v2, gewicht);
+							}else {
+								edge = new Edge(v1, v2, gewicht, cost);
+							}
+						} else {
+							edge = new Edge(v1, v2);
+						}*/
+							vertices.get(v2).addEdge(edge);
+							E++;
 						}
-						vertices.get(v2).addEdge(edge);
-						E++;
 					}
 				}
 			}
@@ -170,6 +201,20 @@ public class Graph {
 		catch (IOException e) {
 			System.out.println("Fehler beim Einlesen der Datei oder Datei nicht gefunden");
 		}
+	}
+
+	public Edge modifyEdge(String[] kante, int v1, int v2, double gewicht, double cost){
+		Edge edge;
+		if (kante.length > 2) {
+			if(kante.length == 3) {
+				edge = new Edge(v1, v2, gewicht);
+			}else {
+				edge = new Edge(v1, v2, gewicht, cost);
+			}
+		} else {
+			edge = new Edge(v1, v2);
+		}
+		return edge;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -374,5 +419,14 @@ public class Graph {
         fordFulkerson = new FordFulkerson(V,vertices,gerichtet);
 
 		System.out.println("Maximaler Flusswert: " + fordFulkerson.getMaxFlow(start, ende));
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Algorithmus f�r Praktikum 7
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public void cycleCanceling(){
+		cycleCanceling = new CycleCanceling(V, vertices, gerichtet);
+		System.out.println(cycleCanceling.getMinCostFlow());
 	}
 }

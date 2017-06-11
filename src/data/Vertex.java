@@ -7,6 +7,8 @@ public class Vertex implements Cloneable{
 	private double distance = Double.MAX_VALUE;
 	private Vertex prev;
 	public List<Edge> edges;
+	private double balance = 0;
+	boolean isSink = false;
 	
 	public Vertex(int data){
 		this.data = data;
@@ -40,6 +42,22 @@ public class Vertex implements Cloneable{
 	
 	public double getDistance(){
 		return distance;
+	}
+
+	public void setBalance(double balance){
+		this.balance += balance;
+	}
+
+	public double getBalance(){
+		return balance;
+	}
+
+	public void setisSink(){
+		isSink = true;
+	}
+
+	public boolean isSink(){
+		return isSink;
 	}
 	
 	public void setPrev(Vertex prev){

@@ -11,7 +11,7 @@ public class MooreBellmanFord {
     private int V;
     private List<Vertex> vertices;
     private boolean gerichtet;
-    private List<Edge> cycle;
+    private List<Vertex> cycle;
 
     public MooreBellmanFord(int V, List<Vertex> vertices, boolean gerichtet) {
         this.V = V;
@@ -24,6 +24,9 @@ public class MooreBellmanFord {
      *
      * @param start - starting vertex value
      * @return - graph with modifcated distance and predecessors for each vertex
+     * ---------------------------------------------------------------------------
+     * Modified method getSmallesRoute for Praktikum with minCostFlow
+     * Replace getCost() with getWeight()
      */
     public Graph getSmallestRoute(int start) {
         Graph graph = new Graph(gerichtet);
@@ -41,13 +44,12 @@ public class MooreBellmanFord {
 
         setEdges(graph.vertices);
         List<Edge> edgeList = getEdges(graph.vertices);;
-        List<Edge> tempListforCycle = new ArrayList<>();
 
         for(int i=0; i<vertices.size()-1; i++){
             for (Edge edge:edgeList
                  ) {
-                if(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight() < graph.vertices.get(edge.getDest()).getDistance()){
-                    graph.vertices.get(edge.getDest()).setDistance(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight());
+                if(graph.vertices.get(edge.getSrc()).getDistance() + edge.getCost() < graph.vertices.get(edge.getDest()).getDistance()){
+                    graph.vertices.get(edge.getDest()).setDistance(graph.vertices.get(edge.getSrc()).getDistance() + edge.getCost());
                     graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(edge.getSrc()));
                 }
             }
@@ -55,12 +57,44 @@ public class MooreBellmanFord {
             edgeList = getEdges(graph.vertices);
 
             if(i==vertices.size()-2){
-                if(checkCycle(edgeList, graph, tempListforCycle)){
-                    edgeList = getEdges(graph.vertices);
+                if(checkCycle(edgeList, graph)){
+                    Vertex startvertex;
+                    List<Vertex> list = new ArrayList<>();
+                    int j=0;
+                    while(true){
+                        if(graph.vertices.get(j).getPrev() != null){
+                            if(list.contains(graph.vertices.get(j).getPrev())){
+                                startvertex = graph.vertices.get(j).getPrev();
+                                break;
+                            }else{
+                                list.add(graph.vertices.get(j).getPrev());
+                                j = graph.vertices.get(j).getPrev().getData();
+                            }
+                        }else {
+                            j++;
+                        }
+                    }
+                    /*for(int j=0; j<graph.vertices.size()-1; j++){
+                        if(list.contains(graph.vertices.get(j).getPrev())){
+                            startvertex = graph.vertices.get(j).getPrev();
+                        }else{
+                            list.add(graph.vertices.get(j).getPrev());
+                        }
+                        //startvertex = graph.vertices.get(j).getPrev();
+                    }*/
+                    Vertex temp = startvertex;
+                    cycle.add(temp);
+                    temp = startvertex.getPrev();
+                    while(graph.vertices.get(temp.getData()) != startvertex){
+                        cycle.add(temp);
+                        temp = graph.vertices.get(temp.getData()).getPrev();
+                    }
+                    cycle.add(graph.vertices.get(temp.getData()));
+                    /*edgeList = getEdges(graph.vertices);
 
-                    checkCycle(edgeList, graph, tempListforCycle);
+                    checkCycle(edgeList, graph);
 
-                    setCycle(tempListforCycle);
+                    setCycle(tempListforCycle);*/
                 }
             }
         }
@@ -124,49 +158,30 @@ public class MooreBellmanFord {
         return edgeList;
     }
 
-    public boolean checkCycle(List<Edge> edgeList, Graph graph, List<Edge> tempListforCycle){
+    public boolean checkCycle(List<Edge> edgeList, Graph graph){
         boolean check = false;
         for (Edge edge:edgeList
                 ) {
-            if(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight() < graph.vertices.get(edge.getDest()).getDistance()){
-                graph.vertices.get(edge.getDest()).setDistance(graph.vertices.get(edge.getSrc()).getDistance() + edge.getWeight());
+            if(graph.vertices.get(edge.getSrc()).getDistance() + edge.getCost() < graph.vertices.get(edge.getDest()).getDistance()){
+                return true;
+                /*graph.vertices.get(edge.getDest()).setDistance(graph.vertices.get(edge.getSrc()).getDistance() + edge.getCost());
                 graph.vertices.get(edge.getDest()).setPrev(graph.vertices.get(edge.getSrc()));
-                check = true;
-                tempListforCycle.add(edge);
+                check = true;*/
+                //tempListforCycle.add(edge);
             }
         }
         return check;
     }
 
-    public void setCycle(List<Edge> edgeList){
-        int start = edgeList.get(0).getSrc();
-        boolean []visited = new boolean[V];
-
-        while(true){
-            for (Edge edge:edgeList
-                 ) {
-                if(!visited[edge.getDest()] && edge.getSrc() == start ){
-                    cycle.add(edge);
-                    start = edge.getDest();
-                    visited[edge.getDest()] = true;
-                }
-            }
-
-            if(cycle.get(0).getSrc() == cycle.get(cycle.size()-1).getDest()){
-                break;
-            }
-        }
-    }
-
-    public List<Edge> getCycle(){
+    public List<Vertex> getCycle(){
         return cycle;
     }
 
     public void printCycle(){
         System.out.println("Es existiert ein negativer Zykel: ");
-        for (Edge edge:cycle
+        for (Vertex vertex:cycle
              ) {
-            System.out.println(edge.getSrc() + " -> " + edge.getDest());
+            System.out.print(vertex.getData() + " ");
         }
     }
 

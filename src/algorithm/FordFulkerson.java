@@ -24,6 +24,9 @@ public class FordFulkerson {
      * @param start - starting vertex
      * @param ende - ending vertex
      * @return - value for maxFlow
+     * ------------------------------------------
+     * Modified getMaxFlow for Praktikum with getMinCostFlow
+     * Remove everything with Balance
      */
     public double getMaxFlow(int start, int ende){
         Graph graph = new Graph(gerichtet);
@@ -43,17 +46,24 @@ public class FordFulkerson {
         List<Vertex> tour;
         double min;
 
-        while(dijkstra.checkTour(dijkstra.getSmallestRoute(start), ende, start)){
+        while(dijkstra.checkTour(dijkstra.getSmallestRoute(start), ende, start) && (vertices.get(start).getBalance() > 0 && vertices.get(ende).getBalance() != 0)){
             tour = dijkstra.getTour();
             min = getGamma(graph, tour);
-            maxFlow += min;
+            if(min > vertices.get(start).getBalance()){
+                min = vertices.get(start).getBalance();
+            }
 
+            if(min > vertices.get(ende).getBalance() * (-1)){
+                min = vertices.get(ende).getBalance() * (-1);
+            }
             setFlow(graph, tour, min);
 
             graph = getResidualGraph(graph, tour);
 
             dijkstra.setVertices(graph.vertices);
             tour.clear();
+            vertices.get(start).setBalance(-min);
+            vertices.get(ende).setBalance(min);
         }
 
         return maxFlow;
