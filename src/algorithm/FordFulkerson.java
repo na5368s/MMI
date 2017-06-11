@@ -19,6 +19,12 @@ public class FordFulkerson {
         this.gerichtet = gerichtet;
     }
 
+    /**
+     *
+     * @param start - starting vertex
+     * @param ende - ending vertex
+     * @return - value for maxFlow
+     */
     public double getMaxFlow(int start, int ende){
         Graph graph = new Graph(gerichtet);
         double maxFlow = 0;
@@ -53,6 +59,12 @@ public class FordFulkerson {
         return maxFlow;
     }
 
+    /**
+     *
+     * @param graph - actual graph with modified Flow values
+     * @param tour - minimal tour from start to end vertex
+     * @return - modified graph (delete or add edges)
+     */
     public Graph getResidualGraph(Graph graph, List<Vertex> tour){
         Edge temp;
         for(int i=0; i<tour.size()-1; i++){
@@ -105,6 +117,12 @@ public class FordFulkerson {
         return graph;
     }
 
+    /**
+     *
+     * @param graph - modified graph after getting the minimal
+     * @param tour - minimal tour to set only the vertices flows in the tour
+     * @param min - min value
+     */
     public void setFlow(Graph graph, List<Vertex> tour, double min){
         for (int i=0; i<tour.size()-1; i++){
             int src = tour.get(i).getData();
@@ -123,6 +141,12 @@ public class FordFulkerson {
         }
     }
 
+    /**
+     *
+     * @param graph - modified graph
+     * @param tour - minimal tour
+     * @return - minimal value of the minimal tour in the graph
+     */
     public double getGamma(Graph graph, List<Vertex> tour){
         int src, dest;
         double min = Double.MAX_VALUE;
