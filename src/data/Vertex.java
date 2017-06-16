@@ -8,6 +8,7 @@ public class Vertex implements Cloneable{
 	private Vertex prev;
 	public List<Edge> edges;
 	private double balance = 0;
+	private double balancetemp = 0;
 	boolean isSink = false;
 	
 	public Vertex(int data){
@@ -50,6 +51,14 @@ public class Vertex implements Cloneable{
 
 	public double getBalance(){
 		return balance;
+	}
+
+	public void setBalancetemp(double balancetemp){
+		this.balancetemp += balancetemp;
+	}
+
+	public double getBalancetemp(){
+		return balancetemp;
 	}
 
 	public void setisSink(){

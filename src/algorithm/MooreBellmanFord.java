@@ -12,12 +12,14 @@ public class MooreBellmanFord {
     private List<Vertex> vertices;
     private boolean gerichtet;
     private List<Vertex> cycle;
+    private List<Vertex> tour;
 
     public MooreBellmanFord(int V, List<Vertex> vertices, boolean gerichtet) {
         this.V = V;
         this.vertices = vertices;
         this.gerichtet = gerichtet;
         cycle = new ArrayList<>();
+        tour = new ArrayList<>();
     }
 
     /**
@@ -102,6 +104,44 @@ public class MooreBellmanFord {
 
 
         return graph;
+    }
+
+    public void setTour(Graph graph, int ende, int start){
+        if(start != ende){
+            if(graph.vertices.get(ende).getPrev() != null) {
+                recTour(graph, graph.vertices.get(ende).getPrev().getData(), start);
+                tour.add(graph.vertices.get(ende));
+                //System.out.println(ende);
+            }
+
+        }else{
+            tour.add(graph.vertices.get(ende));
+            //System.out.println(ende);
+        }
+
+        //System.out.println("Distance = " + graph.vertices.get(ende).getDistance());
+    }
+
+    public void recTour(Graph graph, int start, int ende){
+        if(start != ende){
+            if(graph.vertices.get(start).getPrev() != null) {
+                recTour(graph, graph.vertices.get(start).getPrev().getData(), ende);
+                tour.add(graph.vertices.get(start));
+                //System.out.print(start + " ");
+            }
+
+        }else{
+            tour.add(graph.vertices.get(ende));
+            //System.out.print(ende + " ");
+        }
+    }
+
+    public List<Vertex> getTour(){
+        return tour;
+    }
+
+    public void clearTour(){
+        tour.clear();
     }
 
     public void printRouteandDistance(Graph graph, int ende, int start){

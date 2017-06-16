@@ -18,6 +18,7 @@ public class Graph {
 	private MooreBellmanFord mooreBellmanFord;
     private FordFulkerson fordFulkerson;
     private CycleCanceling cycleCanceling;
+    private SuccessiveShortestPath successiveShortestPath;
 
 	public List<Vertex> vertices;
 	protected int V = 0;
@@ -428,5 +429,14 @@ public class Graph {
 	public void cycleCanceling(){
 		cycleCanceling = new CycleCanceling(V, vertices, gerichtet);
 		System.out.println(cycleCanceling.getMinCostFlow());
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Algorithmus f�r Praktikum 8
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public void successiveShortestPath(){
+		successiveShortestPath = new SuccessiveShortestPath(V, vertices, gerichtet);
+		System.out.println(successiveShortestPath.getMinCostFlow());
 	}
 }
