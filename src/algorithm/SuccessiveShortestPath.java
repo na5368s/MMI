@@ -51,8 +51,6 @@ public class SuccessiveShortestPath {
                         tvertex = t;
                         check = true;
                         break;
-                    } else {
-                        continue;
                     }
                 }
 
