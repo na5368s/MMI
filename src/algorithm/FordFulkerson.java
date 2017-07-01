@@ -46,24 +46,28 @@ public class FordFulkerson {
         List<Vertex> tour;
         double min;
 
-        while(dijkstra.checkTour(dijkstra.getSmallestRoute(start), ende, start) && (vertices.get(start).getBalance() > 0 && vertices.get(ende).getBalance() != 0)){
+        while(dijkstra.checkTour(dijkstra.getSmallestRoute(start), ende, start) /*&& (vertices.get(start).getBalance() > 0 && vertices.get(ende).getBalance() != 0)*/){
             tour = dijkstra.getTour();
             min = getGamma(graph, tour);
-            if(min > vertices.get(start).getBalance()){
+            /*if(min > vertices.get(start).getBalance()){
                 min = vertices.get(start).getBalance();
             }
 
             if(min > vertices.get(ende).getBalance() * (-1)){
                 min = vertices.get(ende).getBalance() * (-1);
             }
+            */
             setFlow(graph, tour, min);
 
             graph = getResidualGraph(graph, tour);
 
             dijkstra.setVertices(graph.vertices);
             tour.clear();
+            maxFlow += min;
+            /*
             vertices.get(start).setBalance(-min);
             vertices.get(ende).setBalance(min);
+            */
         }
 
         return maxFlow;
@@ -138,7 +142,7 @@ public class FordFulkerson {
             int src = tour.get(i).getData();
             int dest = tour.get(i + 1).getData();
 
-            if(vertices.get(src).getEdge(src, dest) != null){
+            if(graph.vertices.get(src).getEdge(src, dest) != null){
                 graph.vertices.get(src).getEdge(src, dest).setFlow(min);
                 if(graph.vertices.get(dest).getEdge(dest, src) != null){
                     graph.vertices.get(dest).getEdge(dest, src).setFlow(-min);

@@ -52,6 +52,10 @@ public class Edge implements Comparable<Edge>, Cloneable {
 		return weight;
 	}
 
+	public void setCapacity(double capacity){
+		this.capacity = capacity;
+	}
+
 	public double getCapacity() { return capacity; }
 
 	public void setFlow(double min){

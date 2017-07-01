@@ -13,6 +13,34 @@ public class Main {
 		//--------------------------------------------------------------------------------
 
 		ArrayList<String> textinput = new ArrayList<>();
+		textinput.add("Matching_100_100.txt");
+		textinput.add("Matching2_100_100.txt");
+
+		boolean gerichtet = true;
+
+		for (String string : textinput) {
+			Graph graph = new Graph(gerichtet);
+
+			graph.setFromEdgeList(string);
+			System.out.println("Datei: " + string);
+
+			long start_ms;
+
+			System.out.println("-----------------------------------------------------");
+			System.out.println("Maximale Matchings:");
+			System.out.println("-----------------------------------------------------");
+			start_ms = System.currentTimeMillis();
+			graph.maxMatchings();
+			System.out.println((System.currentTimeMillis() - start_ms) + " ms.");
+			System.out.println();
+
+		}
+
+		//--------------------------------------------------------------------------------
+		// Praktikum 8 : Successive-Shortest-Path
+		//--------------------------------------------------------------------------------
+
+		/*ArrayList<String> textinput = new ArrayList<>();
 		textinput.add("Kostenminimal1.txt");
 		textinput.add("Kostenminimal2.txt");
 		textinput.add("Kostenminimal3.txt");
@@ -38,7 +66,7 @@ public class Main {
 			System.out.println((System.currentTimeMillis() - start_ms) + " ms.");
 			System.out.println();
 
-		}
+		}*/
 
 		//--------------------------------------------------------------------------------
 		// Praktikum 7 : Cycle-Canceling

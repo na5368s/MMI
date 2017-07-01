@@ -19,11 +19,13 @@ public class Graph {
     private FordFulkerson fordFulkerson;
     private CycleCanceling cycleCanceling;
     private SuccessiveShortestPath successiveShortestPath;
+    private MaxMatchings maxMatchings;
 
 	public List<Vertex> vertices;
 	protected int V = 0;
 	private int E = 0;
 	protected boolean gerichtet = false;
+	public int matchings;
 
 	public Graph() {
 		vertices = new ArrayList<Vertex>();
@@ -123,11 +125,12 @@ public class Graph {
 				// Tabulator
 
 				if (kante.length < 2) {
-					Double balance = Double.parseDouble(kante[0]);
-					if(balance < 0){
-						vertices.get(counter).setisSink();
-					}
-					vertices.get(counter++).setBalance(balance);
+//					Double balance = Double.parseDouble(kante[0]);
+//					if(balance < 0){
+//						vertices.get(counter).setisSink();
+//					}
+//					vertices.get(counter++).setBalance(balance);
+					matchings = Integer.parseInt(kante[0]);
 				} else {
 					int v1 = Integer.parseInt(kante[0]); // hier wird v1(s.oben) in
 					// ein Integer
@@ -438,5 +441,14 @@ public class Graph {
 	public void successiveShortestPath(){
 		successiveShortestPath = new SuccessiveShortestPath(V, vertices, gerichtet);
 		System.out.println(successiveShortestPath.getMinCostFlow());
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Algorithmus f�r Praktikum 9
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public void maxMatchings(){
+		maxMatchings = new MaxMatchings(V, vertices, gerichtet, matchings);
+		System.out.println(maxMatchings.getMaxMatchings());
 	}
 }
